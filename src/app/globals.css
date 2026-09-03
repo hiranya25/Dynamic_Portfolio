@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+:root {
+  --obsidian: #0c0b09;
+  --obsidian-2: #131110;
+  --panel: #17130f;
+  --panel-2: #1e1a15;
+  --ivory: #f2ecdd;
+  --taupe: #a89c86;
+  --taupe-dim: #6f6555;
+  --gold: #c9a25c;
+  --gold-bright: #e0bd7c;
+  --gold-dim: #6a5530;
+  --rule: rgba(242, 236, 221, 0.09);
+  --gold-line: rgba(201, 162, 92, 0.24);
+}
+
+@theme inline {
+  --color-obsidian: var(--obsidian);
+  --color-obsidian-2: var(--obsidian-2);
+  --color-panel: var(--panel);
+  --color-panel-2: var(--panel-2);
+  --color-ivory: var(--ivory);
+  --color-taupe: var(--taupe);
+  --color-taupe-dim: var(--taupe-dim);
+  --color-gold: var(--gold);
+  --color-gold-bright: var(--gold-bright);
+  --color-gold-dim: var(--gold-dim);
+  --color-rule: var(--rule);
+  --color-gold-line: var(--gold-line);
+
+  --font-serif: var(--font-cormorant), "Iowan Old Style", Georgia, serif;
+  --font-sans: var(--font-manrope), "Segoe UI", system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-obsidian);
+  color: var(--color-ivory);
+  font-family: var(--font-sans);
+}
+
+::selection {
+  background: var(--color-gold-line);
+  color: var(--color-gold-bright);
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

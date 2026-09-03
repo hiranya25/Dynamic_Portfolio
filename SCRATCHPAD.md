@@ -1,30 +1,33 @@
 # Dyuti Parruck — Luxury Portfolio: Implementation Scratchpad
 
-Working doc against `Dyuti_Parruck_Luxury_Portfolio_Implementation_Plan.pdf`. Repo is currently
-empty (no scaffold yet) — this is the pre-build tracker.
+Working doc against `Dyuti_Parruck_Luxury_Portfolio_Implementation_Plan.pdf` and the revised,
+fact-checked plan ("Beyond the Boardroom"). **Phases 1–3 are built** (Next.js frontend, live
+locally, verified in-browser — see §6). Phases 4–6 (CMS, motion polish, production hardening)
+are not yet started.
 
-## 0. Blockers needing input before those sections can ship for real
+## 0. Verified vs. still-needed input
 
-These are not code problems — nothing below can be built correctly without someone supplying
-the underlying facts/assets. Everything else in the plan is buildable now.
+Everything content-wise on the site right now is sourced to a live public record (career
+history, press, the Netflix credit) — see `src/lib/data/sources.ts`. What's left needing input
+from Dyuti's team, not code:
 
-- [ ] **Netflix appearance** — exact show title, episode, role. No embed is possible either way
-      (DRM/no public API) — only an outbound link or a YouTube clip if one exists.
-- [ ] **Career Journey dates/titles** — confirm the 2010–2024 timeline against current source
-      (LinkedIn or CV), including exact company names/spellings.
-- [ ] **Media Coverage items** — for each: publication name, article URL, date, and whether we
-      have rights to show the publication's logo/a screenshot (default to text + link only if
-      unconfirmed).
-- [ ] **First 5 LinkedIn posts** — since there's no live sync, need the actual 5 posts (text +
-      image + link) to seed the CMS at launch, plus a plan for who re-enters new ones going
-      forward.
-- [ ] **Photography/video** — executive portrait, Dubai skyline/cinematic hero footage, event
-      photos for the Public Figure archive. Stock placeholders can stand in during build but the
-      "premium editorial" feel depends on real assets before launch.
-- [ ] **Supabase project + custom domain** — need an actual Supabase project (URL + anon/service
-      keys) and domain/DNS access before Phase 4/6 can go live for real.
-- [ ] Legal/reputational sign-off on any public-figure claim before publish (per plan's own "only
-      verifiable claims" rule).
+- [ ] **Netflix appearance narrative** — confirmed as Netflix's "Desi Bling" (2026). Open
+      decision: how much of the marriage/separation storyline the press covers to reflect on the
+      appearance detail page (currently defaults to professional framing only).
+- [ ] **Career Journey wording** — dates cross-checked against a public professional profile;
+      confirm exact wording/spelling with Dyuti before publish.
+- [ ] **Media Coverage logos** — currently text + outbound link only; add outlet logos once usage
+      rights are confirmed per publication.
+- [ ] **First 5 LinkedIn/Instagram posts** — Insights page ships as an honest empty state (real
+      profile links + follower count) since no live sync exists on either platform; needs the
+      admin panel (Phase 4) to seed real curated posts.
+- [ ] **Photography/video** — hero portrait, Dubai skyline, appearance cover images are all
+      placeholder monogram treatments (`Monogram` component) by design, not stock photos standing
+      in for a real person. Swap for commissioned photography before launch.
+- [ ] **Supabase project + custom domain** — no backend is wired up yet; the entire site is
+      static/typed data in `src/lib/data/`. Needs real Supabase credentials + DNS before Phase 4/6.
+- [ ] **Business contact email** — Contact page currently only links to verified LinkedIn/Instagram
+      profiles; no email exists to publish yet.
 
 ## 1. Content entities (Supabase / Postgres)
 
@@ -58,21 +61,37 @@ Next.js + TypeScript, Tailwind, Framer Motion, Lucide icons, Supabase (Postgres 
 
 ## 4. Phase checklist
 
-- [ ] **Phase 1 — Brand foundation**: color tokens (obsidian/charcoal/ivory/champagne
-      gold/bronze), type scale (serif display + sans body), spacing/grid, base components
-- [ ] **Phase 2 — Core pages**: Navbar, Hero, About, Expertise, Career Journey, Public Figure,
-      Dubai section, Contact, Footer
-- [ ] **Phase 3 — LinkedIn & Media**: featured post + 4-post grid, media archive, appearance
-      gallery + detail pages
-- [ ] **Phase 4 — CMS**: Supabase Auth admin login, editors for each entity above, image upload,
-      featured/publish toggles
-- [ ] **Phase 5 — Motion & polish**: scroll reveals, gold divider animation, counters, timeline,
-      hover states, cinematic transitions, desktop-only magnetic buttons
-- [ ] **Phase 6 — Production**: SEO (title/meta/OG/Person+Organization JSON-LD), sitemap.xml,
-      robots.txt, canonical URLs, image optimization (WebP/AVIF via next/image), analytics,
-      domain + SSL, 404 page, cross-device QA
+- [x] **Phase 1 — Brand foundation**: color tokens (obsidian/charcoal/ivory/champagne gold/
+      bronze) in `src/app/globals.css` `@theme`, Cormorant Garamond / Manrope / IBM Plex Mono via
+      `next/font`, base components (`Button`, `GoldRule`, `SectionHeading`, `Monogram`)
+- [x] **Phase 2 — Core pages**: Navbar (+ mobile menu), Hero, About, Expertise, Career Journey,
+      Public Figure, Dubai section, Contact, Footer — all built and rendering
+- [x] **Phase 3 — Public Figure & Media**: appearance archive with category filter, dynamic
+      `/public-figure/[slug]` detail pages, media coverage grid, Insights honest-empty-state.
+      (Featured-post LinkedIn layout deferred to Phase 4 — no real posts to feature yet.)
+- [ ] **Phase 4 — CMS**: Supabase project provisioning, Auth admin login at `/admin` (unlisted,
+      `robots.txt`-disallowed), editors per entity, image upload, featured/publish toggles —
+      **not started, needs Supabase credentials first**
+- [ ] **Phase 5 — Motion & polish**: scroll reveals and count-up stats are done (Framer Motion,
+      `prefers-reduced-motion`-aware); still open — cinematic page transitions, desktop-only
+      magnetic buttons, real hero video/photography once assets exist
+- [ ] **Phase 6 — Production**: metadata/OG/Person JSON-LD/sitemap.xml/robots.txt are done;
+      still open — real domain, analytics, image optimization once real photos replace
+      monograms, Lighthouse pass, cross-device QA beyond the one mobile viewport already checked
 
-## 5. Open design flags (not blockers, just worth deciding early)
+## 5. What's actually in the repo right now
+
+- `src/lib/data/` — typed content layer (profile, expertise, experience, appearances, media,
+  social, sources). This is the seam where Supabase queries replace static imports in Phase 4 —
+  every page already reads through this layer, not inline content.
+- `src/components/` — Navbar, Footer, Hero pieces, `Reveal` (scroll motion), `Counter` (count-up
+  stats), `Timeline`, `Monogram` (honest placeholder imagery), `AppearanceCard`, `MediaCard`.
+- Routes: `/`, `/about`, `/expertise`, `/career-journey`, `/public-figure` (+ `/[slug]`),
+  `/media-coverage`, `/insights`, `/contact`, plus `sitemap.ts`, `robots.ts`, `not-found.tsx`.
+- `npm run build` and `npm run lint` are clean. Verified in a headless browser across all routes
+  and one mobile viewport, zero console errors.
+
+## 6. Open design flags (not blockers, just worth deciding early)
 
 - Admin should be an **unlisted route**, not a public nav item, despite being listed in the
   plan's "Website Architecture."
